@@ -21,35 +21,35 @@ public class TaskController {
     @ApiOperation(value = "/task", notes = "This endpoint lets user to see all tasks of him/her.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<TaskDTO> getAllTasks(ModelMap model){
-        return taskService.getAllTask(model);
+    public List<TaskDTO> getAllTasks(){
+        return taskService.getAllTask();
     }
 
     @ApiOperation(value = "/task/create", notes = "This endpoint lets user to create a task.")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/create")
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO, ModelMap model){
-        return taskService.createTask(taskDTO, model);
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO){
+        return taskService.createTask(taskDTO);
     }
 
     @ApiOperation(value = "/task/{taskId}", notes = "This endpoint lets user to update an existing task.")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(path = "/{taskId}")
-    public TaskDTO editTask(@PathVariable long taskId, @RequestBody TaskDTO taskDTO, ModelMap model){
-        return taskService.editTask(taskId,taskDTO, model);
+    public TaskDTO editTask(@PathVariable long taskId, @RequestBody TaskDTO taskDTO ){
+        return taskService.editTask(taskId,taskDTO);
     }
 
     @ApiOperation(value = "/task/{taskId}", notes = "This endpoint lets user to display an existing task.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{taskId}")
-    public TaskDTO showTask(@PathVariable long taskId, ModelMap model) {
-        return taskService.showTask(taskId, model);
+    public TaskDTO showTask(@PathVariable long taskId ) {
+        return taskService.showTask(taskId);
     }
 
     @ApiOperation(value = "/task/{taskId}", notes = "This endpoint lets user to delete an existing task.")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/{taskId}")
-    public void deleteTask(@PathVariable long taskId, ModelMap model) {
-        taskService.deleteTask(taskId, model);
+    public void deleteTask(@PathVariable long taskId ) {
+        taskService.deleteTask(taskId);
     }
 }

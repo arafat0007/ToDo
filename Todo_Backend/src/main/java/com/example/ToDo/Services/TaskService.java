@@ -5,12 +5,12 @@ import org.springframework.ui.ModelMap;
 import java.util.List;
 
 public interface TaskService {
-    public List<TaskDTO> getAllTask(ModelMap model);
-    public TaskDTO createTask(TaskDTO taskDTO, ModelMap model);
+    public List<TaskDTO> getAllTask();
+    public TaskDTO createTask(TaskDTO taskDTO );
 
-    public TaskDTO editTask(long taskId, TaskDTO taskDTO, ModelMap model);
+    public TaskDTO editTask(long taskId, TaskDTO taskDTO );
 
-    public TaskDTO showTask(long taskId, ModelMap model);
+    public TaskDTO showTask(long taskId );
 
-    public void deleteTask(long taskId, ModelMap model);
+    public void deleteTask(long taskId );
 }

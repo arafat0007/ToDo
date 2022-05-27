@@ -1,5 +1,7 @@
 package com.example.ToDo.Services;
 
+import com.example.ToDo.Controllers.Response;
+import com.example.ToDo.Controllers.Status;
 import com.example.ToDo.Domain.*;
 import com.example.ToDo.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,22 +42,36 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public String userRegister(RegistrationRequest request) {
+    @Override
+    public void setIsLoggedIn(String email,boolean isLoggedInFlag) {
+        System.out.println(email);
+        User user = findUserByEmail(email);
+        user.setIsLoggedin(isLoggedInFlag);
+        userRepository.save(user);
+    }
+
+    public Response userRegister(RegistrationRequest request) {
         boolean isValidEmail = emailService.test(request.getEmail());
 
         if(!isValidEmail){
-            throw new IllegalStateException("email not valid");
+            System.out.println("email not valid");
+            return new Response("email not valid", Status.Error);
+            //throw new IllegalStateException("email not valid");
         }
 
         //signup user and save token
-        String token = SignUpUserAndCreateToken(request);
+        Response signUpResponse = SignUpUserAndCreateToken(request);
+        if (signUpResponse.getStatus() == Status.Error){
+            System.out.println(signUpResponse.getMsg());
+            return new Response(signUpResponse.getMsg(), Status.Error);
+        }
 
         //Send Email with confirmation token
-        String TokenConfirmationURL = "http://localhost:8080/registration/confirm?token=" +token;
+        String TokenConfirmationURL = "http://localhost:8080/registration/confirm?token=" +signUpResponse.getMsg(); //signUpResponse.getMsg() = token
 
         emailService.send(request.getEmail(), BuildEmail(request.getFirstName(), TokenConfirmationURL));
 
-        return token;
+        return new Response("Registration OK", Status.OK);
     }
 
     private String BuildEmail(String firstName, String tokenConfirmationURL) {
@@ -126,14 +143,15 @@ public class UserServiceImpl implements UserService {
                 "</div></div>";
     }
 
-    private String SignUpUserAndCreateToken(RegistrationRequest request) {
+    private Response SignUpUserAndCreateToken(RegistrationRequest request) {
         boolean isUserExist = userRepository.findByEmail(request.getEmail()).isPresent();
 
         if(isUserExist){
             // TODO check of attributes are the same and
             // TODO if email not confirmed send confirmation email.
 
-            throw new IllegalStateException("email already taken");
+            System.out.println("Email already taken");
+            return new Response("Email already taken", Status.Error);
         }
 
         //creating new user with request data
@@ -162,7 +180,7 @@ public class UserServiceImpl implements UserService {
         //Save token to Database
         tokenServiceImpl.saveToken(token);
 
-        return tokenContent;
+        return new Response(tokenContent, Status.OK);
     }
 
     public String confirmToken(String token) {
@@ -190,7 +208,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getLoggedInUserName(ModelMap model) {
+    public String getLoggedInUserName() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {

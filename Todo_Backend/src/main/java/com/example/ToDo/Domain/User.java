@@ -37,6 +37,7 @@ public class User implements UserDetails {
     private UserRole userRole;
     private Boolean locked = false;
     private Boolean enabled = false;
+    private Boolean isLoggedin = false;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore

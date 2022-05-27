@@ -19,12 +19,13 @@ public class TaskToTaskDTO implements Converter<Task, TaskDTO> {
         }
 
         final TaskDTO taskDTO = new TaskDTO();
-        //taskDTO.setId(source.getId());
+        taskDTO.setId(source.getId());
         taskDTO.setTitle(source.getTitle());
         taskDTO.setDescription(source.getDescription());
         taskDTO.setTaskStatus(source.getTaskStatus());
         taskDTO.setTaskPriority(source.getTaskPriority());
         taskDTO.setTag(source.getTag());
+        taskDTO.setCreateTime(source.getCreateTime());
 
         return taskDTO;
     }

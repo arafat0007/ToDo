@@ -6,7 +6,9 @@ import SignUpPage from "./components/signIn/SignUpPage";
 import TaskPage from "./components/task/TaskPage";
 import TaskListPage from "./components/taskList/TaskListPage";
 import ErrorPage from "./components/Error/ErrorPage";
-import TaskFormPage from "./components/taskForm/TaskFormPage";
+import CreateTaskFormPage from "./components/taskForm/CreateTaskFormPage";
+import ConfirmationPage from "./components/Confirmation/ConfirmationPage";
+import EditTaskFormPage from "./components/taskForm/EditTaskFormPage";
 
 function App() {
   return (
@@ -19,9 +21,11 @@ function App() {
               <Route path="/signin" element={<SignInPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/task/:id" element={<TaskPage />} />
-              <Route path="/task/edit/:id" element={<TaskFormPage />} />
-              <Route path="/task/create" element={<TaskFormPage />} />
+              <Route path="/task/create" element={<CreateTaskFormPage />} />
               <Route path="/error" element={<ErrorPage />} />
+              <Route path="/task/edit/:id" element={<EditTaskFormPage />} />
+
+              <Route path="/confirmation" element={<ConfirmationPage />} />
           </Routes>
       </BrowserRouter>
     </>

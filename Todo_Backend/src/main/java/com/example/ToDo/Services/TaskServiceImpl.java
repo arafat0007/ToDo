@@ -21,15 +21,16 @@ public class TaskServiceImpl implements TaskService {
     private final TaskToTaskDTO taskToTaskDTO;
 
     @Override
-    public List<TaskDTO> getAllTask(ModelMap model) {
-        String loggedInUserEmail = userService.getLoggedInUserName(model);
+    public List<TaskDTO> getAllTask() {
+        String loggedInUserEmail = userService.getLoggedInUserName();
+        System.out.println("#####################"+loggedInUserEmail);
         List<Task> taskList = userService.findUserByEmail(loggedInUserEmail).getTasks();
         List<TaskDTO> taskDTOList = taskList.stream().map(task -> taskToTaskDTO.convert(task)).collect(Collectors.toList());
         return taskDTOList;
     }
 
     @Override
-    public TaskDTO createTask(TaskDTO taskDTO, ModelMap model) {
+    public TaskDTO createTask(TaskDTO taskDTO) {
         if (taskDTO.getTitle().isEmpty()){
             throw new IllegalArgumentException("Title of task can not be null");
         }
@@ -41,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
         newTask.setTag(taskDTO.getTag());
         newTask.setCreateTime(LocalDateTime.now());
 
-        String loggedInUserEmail = userService.getLoggedInUserName(model);
+        String loggedInUserEmail = userService.getLoggedInUserName();
         User taskOwnerUser = userService.findUserByEmail(loggedInUserEmail);
         newTask.setUser(taskOwnerUser);
 
@@ -53,8 +54,8 @@ public class TaskServiceImpl implements TaskService {
         return taskToTaskDTO.convert(newTask);
     }
 
-    private Task getExistingTask(long taskId, ModelMap model) {
-        String loggedInUserEmail = userService.getLoggedInUserName(model);
+    private Task getExistingTask(long taskId) {
+        String loggedInUserEmail = userService.getLoggedInUserName();
         User taskOwnerUser = userService.findUserByEmail(loggedInUserEmail);
         Task task = taskOwnerUser.getTasks().stream().filter(t -> t.getId() == taskId).findFirst().get();
         //System.out.println("getExistingTask id "+task.getId());
@@ -62,8 +63,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO editTask(long taskId, TaskDTO taskDTO, ModelMap model) {
-        Task existingTask = getExistingTask(taskId, model);
+    public TaskDTO editTask(long taskId, TaskDTO taskDTO) {
+        Task existingTask = getExistingTask(taskId);
         if(existingTask == null){
             throw new IllegalArgumentException("Task not found to Show");
         }
@@ -73,6 +74,7 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setTaskStatus(taskDTO.getTaskStatus());
         existingTask.setTaskPriority(taskDTO.getTaskPriority());
         existingTask.setTag(taskDTO.getTag());
+        existingTask.setCreateTime(existingTask.getCreateTime());
 
         taskRepository.save(existingTask);
 
@@ -80,8 +82,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO showTask(long taskId, ModelMap model) {
-        Task existingTask = getExistingTask(taskId, model);
+    public TaskDTO showTask(long taskId) {
+        Task existingTask = getExistingTask(taskId);
         if(existingTask == null){
             throw new IllegalArgumentException("Task not found to Show");
         }
@@ -89,8 +91,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(long taskId, ModelMap model) {
-        Task existingTask = getExistingTask(taskId, model);
+    public void deleteTask(long taskId ) {
+        Task existingTask = getExistingTask(taskId);
         //System.out.println("delete task id "+existingTask.getId());
 
         if(existingTask == null){
