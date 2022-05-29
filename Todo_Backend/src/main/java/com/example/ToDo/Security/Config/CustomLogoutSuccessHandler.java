@@ -26,12 +26,5 @@ public class CustomLogoutSuccessHandler extends
             Authentication authentication)
             throws IOException, ServletException {
 
-        //As user is logging out, we make isLoggedIn to false
-        System.out.println("LOGOUT   "+request);
-        System.out.println("LOGOUT   "+response);
-        System.out.println("LOGOUT   "+authentication);
-        //userService.setIsLoggedIn(authentication.getPrincipal().toString(),false);
-
-        System.out.println("%%%%user er auth null korsi");
     }
 }

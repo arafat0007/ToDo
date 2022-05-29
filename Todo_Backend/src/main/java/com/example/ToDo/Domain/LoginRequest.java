@@ -14,4 +14,6 @@ public class LoginRequest {
     @NonNull
     @ApiModelProperty(required = true, value = "User's password")
     private final String password;
+    @ApiModelProperty(required = true, value = "User's remember me flag")
+    private final Boolean remember_me;
 }

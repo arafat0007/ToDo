@@ -43,11 +43,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setIsLoggedIn(String email,boolean isLoggedInFlag) {
-        System.out.println(email);
-        User user = findUserByEmail(email);
-        user.setIsLoggedin(isLoggedInFlag);
-        userRepository.save(user);
+    public String getLoggedUserFirstName() {
+        User user = userRepository.findByEmail(getLoggedInUserName()).orElseThrow(() -> new NullPointerException("user not found after filtering by given email"));
+        return user.getFirstName();
     }
 
     public Response userRegister(RegistrationRequest request) {

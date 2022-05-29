@@ -2,10 +2,7 @@ package com.example.ToDo.JWT;
 
 import com.example.ToDo.Services.UserService;
 import com.google.common.base.Strings;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,16 +36,21 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-    public String JwtTokenGenerator(Authentication authentication){
+    public String JwtTokenGenerator(Authentication authentication, boolean remember_me){
+        //if remember me is on, add 11 more days to expiration for jwt token
+        long extraDays = 0;
+        if (remember_me){
+            extraDays = 11;
+        }
         String token = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("authorities", authentication.getAuthorities())
                 .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays()+extraDays)))
                 .signWith(secretKey)
                 .compact();
 
-        return token;
+        return jwtConfig.getTokenPrefix() + token; //Bearer Token
     }
 
     @Override
@@ -57,8 +59,6 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader(jwtConfig.getAuthorizationHeader());
-
-        System.out.println("inside jwtver  "+authorizationHeader);
 
         if (Strings.isNullOrEmpty(authorizationHeader)) {
             filterChain.doFilter(request, response);
@@ -89,11 +89,6 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                     null,
                     simpleGrantedAuthorities
             );
-
-            if (!userService.findUserByEmail(username).getIsLoggedin()){
-                System.out.println("user authorized na but token ok");
-                return;
-            }
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             System.out.println(username+" is authorized!!!!!!!!");

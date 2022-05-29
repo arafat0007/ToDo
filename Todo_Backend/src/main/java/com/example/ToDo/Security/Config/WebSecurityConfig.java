@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,6 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
@@ -92,25 +95,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add JWT token filter
         http.addFilterBefore(new JwtTokenVerifier(secretKey, jwtConfig, userService), UsernamePasswordAuthenticationFilter.class);
 
-        //http
-//                .httpBasic().disable()
-//                .formLogin().disable()
-                //.logout()
-                //.logoutUrl("/logout")
-                //.invalidateHttpSession(true)
-                //.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)); //default logout success handler
+        http
+                .httpBasic().disable()
+                .formLogin().disable()
+                .logout()
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)); //default logout success handler
                 //.addLogoutHandler(logoutHandler()) //custom logout handler
                 //.logoutSuccessHandler(logoutSuccessHandler()); //custom logout successful handler
-//                .rememberMe()
-//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-//                .key("something")
-//                .rememberMeParameter("remember-me") //front end remember me check box should have "remember-me" as name
-//                .and()
-//                .logout();
-//                .logoutUrl("http://localhost:3000/logout");
-
-
-
     }
 
     //custom logout handler
@@ -120,10 +113,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 
     //custom logout successful handler
-    @Bean
-    public LogoutSuccessHandler logoutSuccessHandler() {
-        return new CustomLogoutSuccessHandler(userService);
-    }
+//    @Bean
+//    public LogoutSuccessHandler logoutSuccessHandler() {
+//        return new CustomLogoutSuccessHandler(userService);
+//    }
 
     // Used by spring security if CORS is enabled.
     @Bean
@@ -135,7 +128,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setExposedHeaders(Arrays.asList("Authorization"));
+        config.setExposedHeaders(Arrays.asList("Authorization", "username"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

@@ -15,5 +15,5 @@ public interface UserService extends UserDetailsService {
 
     public void saveUser(User user);
 
-    void setIsLoggedIn(String email,boolean b);
+    public String getLoggedUserFirstName();
 }

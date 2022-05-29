@@ -58,13 +58,10 @@ public class UserController {
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
             //creating jwt token
-            String jwtToken = jwtTokenVerifier.JwtTokenGenerator(authenticate);
+            String jwtToken = jwtTokenVerifier.JwtTokenGenerator(authenticate, loginRequest.getRemember_me());
 
             HttpHeaders responseHeader = new HttpHeaders();
             responseHeader.add(HttpHeaders.AUTHORIZATION, jwtToken);
-
-            //as all ok, make user.isLoggedIn = true
-            userService.setIsLoggedIn(loginRequest.getEmail(),true);
 
             return ResponseEntity.ok()
                     .headers(
@@ -74,6 +71,7 @@ public class UserController {
         catch (BadCredentialsException e){
             System.out.println("Login unsuccessful.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//            return ResponseEntity.badRequest().body("bad login");
         }
     }
 
@@ -94,22 +92,21 @@ public class UserController {
                 ).body("User logged in.");
     }
 
-    @ApiOperation(value = "/bal", notes = "This endpoint lets user to login.")
-    @PostMapping(path = "/bal")
-    public ResponseEntity<?> UserLogout(){
+    @ApiOperation(value = "/username", notes = "This endpoint gives logged in user first name")
+    @GetMapping(path = "/username")
+    public ResponseEntity<?> getUserName() {
 
-        System.out.println("inside logout controller");
-
+        try {
             HttpHeaders responseHeader = new HttpHeaders();
-
-            //as all ok, make user.isLoggedIn = true
-            //userService.setIsLoggedIn(loginRequest.getEmail(),true);
+            responseHeader.add("username", userService.getLoggedUserFirstName());
 
             return ResponseEntity.ok()
                     .headers(
                             responseHeader
-                    ).body("Login successful.");
-
+                    ).body("user name fetch successful.");
+        } catch (NullPointerException e) {
+            System.out.println("No username found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
-
 }

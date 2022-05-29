@@ -2,8 +2,9 @@ import axios from "axios";
 
 const USER_REGIS_URL = "http://localhost:8080/registration";
 const USER_LOGIN_URL = "http://localhost:8080/login";
-const USER_LOGOUT_URL = "http://localhost:8080/bal";
+const USER_LOGOUT_URL = "http://localhost:8080/logout";
 const USER_LOGOUT_CHECK_URL = "http://localhost:8080/IsUserLoggedin";
+const USER_NAME_URL = "http://localhost:8080/username";
 
 class UserService {
     registerUser(user){
@@ -31,7 +32,7 @@ class UserService {
             ,   {
                 headers: {
                     "Content-Type" : "application/json",
-                    "Authorization" : sessionStorage.getItem("Authorization")
+                    "Authorization" : localStorage.getItem("Authorization")
                 }
             }
         );
@@ -42,31 +43,22 @@ class UserService {
             ,   {
                 headers: {
                     "Content-Type" : "application/json",
-                    "Authorization" : sessionStorage.getItem("Authorization")
+                    "Authorization" : localStorage.getItem("Authorization")
                 }
             }
         );
     }
 
-    // saveEmployee(employee) {
-    //     return axios.post(EMPLOYEE_API_BASE_URL, employee);
-    // }
-    //
-    // getEmployees() {
-    //     return axios.get(EMPLOYEE_API_BASE_URL);
-    // }
-    //
-    // deleteEmployee(id) {
-    //     return axios.delete(EMPLOYEE_API_BASE_URL + "/" + id);
-    // }
-    //
-    // getEmployeeById(id) {
-    //     return axios.get(EMPLOYEE_API_BASE_URL + "/" + id);
-    // }
-    //
-    // updateEmployee(employee, id) {
-    //     return axios.put(EMPLOYEE_API_BASE_URL + "/" + id, employee);
-    // }
+    getUserName(){
+        return axios.get(USER_NAME_URL
+            ,   {
+                headers: {
+                    "Content-Type" : "application/json",
+                    "Authorization" : localStorage.getItem("Authorization")
+                }
+            }
+        );
+    }
 }
 
 export default new UserService();

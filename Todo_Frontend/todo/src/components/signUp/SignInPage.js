@@ -7,12 +7,13 @@ const SignInPage = () => {
     const navigate = useNavigate();
 
     const [hasError, setHasError] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("Incorrect email or password.");
 
     const [user, setUser] = useState(
         {
-            email : "",
-            password : ""
+            "email" : "",
+            "password" : "",
+            "remember_me" : false
         }
     );
 
@@ -21,44 +22,27 @@ const SignInPage = () => {
         setUser({...user, [e.target.name]: value});
     };
 
-    const signinUser = (e) => {
+    const signinUser = async (e) => {
         e.preventDefault();
 
         UserService.signinUser(user)
             .then(
                 (response) => {
-                    console.log(user);
                     if (response.status === 200){
                         console.log(response);
-                        console.log("responseasdasdasd");
-                        sessionStorage.setItem("Authorization", response.headers.authorization)
+                        setHasError(false);
+                        //as session storage is cleared when browser close, we store jwt token in local storage
+                        //so that when we close browser and try with new browser, we dont have to login
+                        localStorage.setItem("Authorization", response.headers.authorization);
+                        //sessionStorage.setItem("Authorization", response.headers.authorization)
                         navigate("/");
 
                     }
-                    else if(response.status === 401) {
-                        setHasError(true);
-                        setErrorMsg("Incorrect email or password.");
-                        console.log("respoasdasdnse");
-                    }
-                    //console.log(response.headers);
                 }
-            );
-
-        // try {
-        //     console.log(user);
-        //     UserService.signinUser(user).then((response) => {
-        //         console.log(response);
-        //         navigate("/");
-        //     });
-        // }catch (error){
-        //     //console.log(error);
-        //     navigate("/error");
-        // }
-
-        // UserService.signinUser(user).then((response) => {
-        //             console.log(response);
-        //             navigate("/");
-        //         });
+            )
+            .catch((error) => {
+                setHasError(true);
+            });
     }
 
     return (
@@ -86,7 +70,7 @@ const SignInPage = () => {
 
                         <div className="checkbox mb-3">
                             <label>
-                                <input type="checkbox" value="remember-me"/> Remember me
+                                <input type="checkbox" value="remember_me" name="remember_me" onChange={(e) => OnValueChange(e)}/> Remember me
                             </label>
                         </div>
                         <button className="w-100 btn btn-lg btn-primary" type="submit" onClick={(e) => signinUser(e)}>Sign in</button>

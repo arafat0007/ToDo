@@ -8,6 +8,7 @@ const TaskListPage = () => {
 
     const [loading, setLoading] = useState(true);
     const [tasks, setTasks] = useState(null);
+    const [userName, setUserName] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,6 +17,10 @@ const TaskListPage = () => {
                 const response = await TaskService.getTasks();
                 setTasks(response.data);
                 console.log(response.data);
+                UserService.getUserName().then((res) => {
+                    setUserName(res.headers.username);
+                    console.log(res);
+                })
             }catch (error){
                 navigate("/signin");
                 console.log(error)
@@ -53,40 +58,68 @@ const TaskListPage = () => {
 
     const Logout = (e) => {
         e.preventDefault();
-        try {
             UserService.logout().then((response) => {
-                console.log(response);
-                //sessionStorage.clear();
+                //console.log(response);
+                localStorage.clear();
+                navigate("/signin");
                 }
-            );
-            navigate("/");
-        }catch (error){
-            navigate("/error");
-            console.log(error);
-        }
-
+            )
+                .catch((error) =>{
+                    navigate("/error");
+                    //console.log(error);
+                });
     };
 
     return (
         <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
             <div className="px-4 pt-5 my-5 text-center">
 
-                <div className="container m-5 p-5 rounded mx-auto bg-light shadow" style={{ width : 800}}>
+                {loading && (
+                    <div>
+                    <div className="spinner-grow text-primary" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-secondary" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-success" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-danger" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-warning" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-info" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-light" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    <div className="spinner-grow text-dark" role="status">
+                    <span className="sr-only"></span>
+                    </div>
+                    </div>
+                    )}
 
-                    <div className="row">
-                        <div className="list-group">
-                            <div className="list-group-item list-group-item-action" aria-current="true">
-                                <div className="d-flex w-100 justify-content-between pt-3 pb-2">
-                                    <h5 className="mb-1">UserName's To-Dos</h5>
-                                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <button className="btn btn-success " type="button" onClick={(e) => createTask(e)}>Create a task!</button>
-                                        <button className="btn btn-outline-danger" type="button" onClick={(e) => Logout(e)}>Logout</button>
+                {!loading && (
+                    <div className="container m-5 p-5 rounded mx-auto bg-light shadow" style={{ width : 800}}>
 
+                        <div className="row">
+                            <div className="list-group">
+                                <div className="list-group-item list-group-item-action" aria-current="true">
+                                    <div className="d-flex w-100 justify-content-between pt-3 pb-2">
+                                        <h5 className="mb-1">{userName}'s To-Dos</h5>
+                                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                            <button className="btn btn-success " type="button" onClick={(e) => createTask(e)}>Create a task!</button>
+                                            <button className="btn btn-outline-danger" type="button" onClick={(e) => Logout(e)}>Logout</button>
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {!loading && (
+                                {!loading && tasks.length ? (
                                     tasks.map(
                                         (task) =>(
                                             <div className="list-group-item list-group-item-action" aria-current="true">
@@ -105,23 +138,20 @@ const TaskListPage = () => {
                                             </div>
                                         )
                                     )
-                            )}
+                                ) : (
+                                    <div className="list-group-item list-group-item-action" aria-current="true">
+                                    <div className="d-flex w-100 justify-content-between pt-2">
+                                        <h5 className="mb-1">There is no task.</h5>
+                                    </div>
+                                </div>
+                                )}
 
-                            {/*(tasks.null) && (*/}
-                            {/*<div className="list-group-item list-group-item-action" aria-current="true">*/}
-                            {/*    <div className="d-flex w-100 justify-content-between pt-2">*/}
-                            {/*        <h5 className="mb-1">There is no task.</h5>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                            {/*)*/}
+                            </div>
 
                         </div>
 
                     </div>
-
-                </div>
-
-
+                )}
 
             </div>
         </div>
