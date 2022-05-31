@@ -1,7 +1,7 @@
 package com.example.ToDo.Services;
 
-import com.example.ToDo.Controllers.Response;
-import com.example.ToDo.Controllers.Status;
+import com.example.ToDo.Domain.Response;
+import com.example.ToDo.Domain.Status;
 import com.example.ToDo.Domain.*;
 import com.example.ToDo.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

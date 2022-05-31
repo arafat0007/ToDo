@@ -1,4 +1,4 @@
-package com.example.ToDo.Controllers;
+package com.example.ToDo.Domain;
 
 public enum Status {
     OK,

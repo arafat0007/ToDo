@@ -1,4 +1,4 @@
-package com.example.ToDo.Controllers;
+package com.example.ToDo.Domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,9 @@
 package com.example.ToDo.Services;
 
-import com.example.ToDo.Controllers.Response;
+import com.example.ToDo.Domain.Response;
 import com.example.ToDo.Domain.RegistrationRequest;
 import com.example.ToDo.Domain.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.ui.ModelMap;
 
 public interface UserService extends UserDetailsService {
     public Response userRegister(RegistrationRequest request);
