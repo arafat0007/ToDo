@@ -31,18 +31,21 @@ A To do application using spring boot, react, jwt, mysql
 - Display a task
 >![image](https://user-images.githubusercontent.com/10024546/171172590-fb8f1eba-edf9-41a4-9358-c1eb9b82798f.png)
 - Edit a task
->>Before
+>Before
 >![image](https://user-images.githubusercontent.com/10024546/171172684-88c52bd1-c318-4a01-9b4c-3a65128827cd.png)
->>After
+
+>After
 >![image](https://user-images.githubusercontent.com/10024546/171172755-51a9ad41-6a8b-4bbf-bde5-bff1b69c954b.png)
 - Delete a task
 >Before
 >![image](https://user-images.githubusercontent.com/10024546/171172815-dc895bf8-5acc-49da-84bd-deb065f64a9c.png)
+
 >After
 >![image](https://user-images.githubusercontent.com/10024546/171172860-5aed56e3-6127-4085-a3bf-053a8506408b.png)
 
 - Logout
 >Before
 >![image](https://user-images.githubusercontent.com/10024546/171172970-033f5690-5316-49a2-a7ef-373929283ce0.png)
+
 >After
 >![image](https://user-images.githubusercontent.com/10024546/171173020-3a7ed4bd-5299-455a-b7f1-3c8cea80e55f.png)
