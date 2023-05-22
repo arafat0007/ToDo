@@ -1,5 +1,5 @@
-# ToDo
-A To do application using spring boot, react, jwt, mysql
+# ToDo Application
+A To do application using spring boot, react, jwt and mysql.
 
 ### Features:
 - User registration
